@@ -30,3 +30,7 @@ Implementation:
 Testing:
 
 - [Specs2](https://etorreborre.github.io/specs2/)
+
+# Quick start
+
+    TODO explain how to use this shizzle

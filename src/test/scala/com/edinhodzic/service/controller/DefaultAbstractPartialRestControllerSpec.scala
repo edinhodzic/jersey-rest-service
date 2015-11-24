@@ -2,7 +2,7 @@ package com.edinhodzic.service.controller
 
 import javax.ws.rs.core.HttpHeaders.LOCATION
 import javax.ws.rs.core.Response
-import javax.ws.rs.core.Response.Status.{CREATED, INTERNAL_SERVER_ERROR}
+import javax.ws.rs.core.Response.Status.{CREATED, INTERNAL_SERVER_ERROR, NOT_FOUND, OK}
 
 import com.edinhodzic.service.domain.{Identifiable, Resource}
 import com.edinhodzic.service.repository.AbstractPartialCrudRepository
@@ -53,6 +53,44 @@ class DefaultAbstractPartialRestControllerSpec extends JerseySpecification with 
     }
 
   }
+
+  "Controller get function" should {
+
+    def mockRepositoryReadToReturnSuccessSome =
+      mockRepositoryReadToReturn(Success(Some(resource)))
+
+    def mockRepositoryReadToReturn(triedMaybeResource: Try[Option[Resource]]) =
+      repository read anyString returns triedMaybeResource
+
+    "invoke repository read function" in {
+      mockRepositoryReadToReturnSuccessSome
+      controller get resourceId
+      there was one(repository).read(resourceId)
+    }
+
+    "return http ok when repository read succeeds with some" in {
+      mockRepositoryReadToReturnSuccessSome
+      assertResponseStatusIs(OK)(controller get resourceId)
+    }
+
+    "return resource as response body when repository read succeeds with some" in {
+      mockRepositoryReadToReturnSuccessSome
+      assertResponseBodyIs(resource)(controller get resourceId)
+    }
+
+    "return http not found when repository read succeeds with none" in {
+      mockRepositoryReadToReturn(Success(None))
+      assertResponseStatusIs(NOT_FOUND)(controller get resourceId)
+    }
+
+    "return http internal server error when repository read fails" in {
+      mockRepositoryReadToReturn(Failure(new RuntimeException))
+      assertResponseStatusIs(INTERNAL_SERVER_ERROR)(controller get resourceId)
+    }
+
+  }
+
+  // TODO implement put and delete functions
 
   class DefaultAbstractPartialRestController[T <: Identifiable : Manifest]
   (repository: AbstractPartialCrudRepository[T])

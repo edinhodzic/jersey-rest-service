@@ -4,7 +4,7 @@ import java.net.URI
 import javax.ws.rs._
 import javax.ws.rs.core.MediaType._
 import javax.ws.rs.core.Response
-import javax.ws.rs.core.Response.Status.NOT_IMPLEMENTED
+import javax.ws.rs.core.Response.Status.{NOT_FOUND, NOT_IMPLEMENTED}
 
 import com.edinhodzic.service.domain.Identifiable
 import com.edinhodzic.service.repository.AbstractPartialCrudRepository
@@ -33,7 +33,19 @@ abstract class AbstractPartialRestController[T <: Identifiable : Manifest](abstr
   @GET
   @Path("{resourceId}")
   @Produces(Array(APPLICATION_JSON))
-  def get(@PathParam("resourceId") resourceId: String): Response = notImplemented
+  def get(@PathParam("resourceId") resourceId: String): Response = {
+    logger info s"getting $resourceId"
+    abstractCrudRepository read resourceId match {
+      case Success(maybeResource) => maybeResource match {
+        case Some(resource) => Response ok() entity resource build()
+        case None => Response status NOT_FOUND build()
+      }
+      // TODO address pattern matching repetition between this and the post function above
+      case Failure(throwable) =>
+        logger error s"$throwable"
+        Response serverError() build()
+    }
+  }
 
   @PUT
   @Path("{resourceId}")
