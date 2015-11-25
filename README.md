@@ -34,3 +34,9 @@ Testing:
 # Quick start
 
     TODO explain how to use this shizzle
+
+# What's next?
+
+- write a REST service using this library
+- dervie from the above service, a Maven arcehtype
+- use the maven archetype to build micro services from scratch, based on this stack, within minutes
