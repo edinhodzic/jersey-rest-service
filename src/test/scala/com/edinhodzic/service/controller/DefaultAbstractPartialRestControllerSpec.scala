@@ -2,7 +2,7 @@ package com.edinhodzic.service.controller
 
 import javax.ws.rs.core.HttpHeaders.LOCATION
 import javax.ws.rs.core.Response
-import javax.ws.rs.core.Response.Status.{CREATED, INTERNAL_SERVER_ERROR, NOT_FOUND, OK}
+import javax.ws.rs.core.Response.Status._
 
 import com.edinhodzic.service.domain.{Identifiable, Resource}
 import com.edinhodzic.service.repository.AbstractPartialCrudRepository
@@ -90,7 +90,43 @@ class DefaultAbstractPartialRestControllerSpec extends JerseySpecification with 
 
   }
 
-  // TODO implement put and delete functions
+  // TODO implement put function
+
+  "Controller delete function" should {
+
+    def mockRepositoryDeleteToReturnSuccess =
+      mockRepositoryDeleteToReturn(Success(Some()))
+
+    def mockRepositoryDeleteToReturn(triedMaybeUnit: Try[Option[Unit]]) =
+      repository delete anyString returns triedMaybeUnit
+
+    "invoke repository delete function" in {
+      mockRepositoryDeleteToReturnSuccess
+      controller delete resourceId
+      there was one(repository).delete(resourceId)
+    }
+
+    "return http no content when repository delete succeeds with some" in {
+      mockRepositoryDeleteToReturnSuccess
+      assertResponseStatusIs(NO_CONTENT)(controller delete resourceId)
+    }
+
+    "return no response body when repository delete succeeds with some" in {
+      mockRepositoryDeleteToReturnSuccess
+      assertResponseBodyIs(null)(controller delete resourceId)
+    }
+
+    "return http not found when repository delete succeeds with none" in {
+      mockRepositoryDeleteToReturn(Success(None))
+      assertResponseStatusIs(NOT_FOUND)(controller delete resourceId)
+    }
+
+    "return http internal server error when repository delete fails" in {
+      mockRepositoryDeleteToReturn(Failure(new RuntimeException))
+      assertResponseStatusIs(INTERNAL_SERVER_ERROR)(controller delete resourceId)
+    }
+
+  }
 
   class DefaultAbstractPartialRestController[T <: Identifiable : Manifest]
   (repository: AbstractPartialCrudRepository[T])

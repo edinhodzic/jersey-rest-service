@@ -4,14 +4,14 @@ import java.net.URI
 import javax.ws.rs._
 import javax.ws.rs.core.MediaType._
 import javax.ws.rs.core.Response
-import javax.ws.rs.core.Response.Status.{NOT_FOUND, NOT_IMPLEMENTED}
+import javax.ws.rs.core.Response.Status.{NOT_FOUND, NOT_IMPLEMENTED, NO_CONTENT}
 
 import com.edinhodzic.service.domain.Identifiable
 import com.edinhodzic.service.repository.AbstractPartialCrudRepository
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.language.postfixOps
-import scala.util.{Try, Failure, Success}
+import scala.util.{Failure, Success, Try}
 
 abstract class AbstractPartialRestController[T <: Identifiable : Manifest](abstractCrudRepository: AbstractPartialCrudRepository[T]) {
 
@@ -33,7 +33,7 @@ abstract class AbstractPartialRestController[T <: Identifiable : Manifest](abstr
     logger info s"getting $resourceId"
     process[Option[T]](abstractCrudRepository read resourceId, {
       case Some(resource) => Response ok() entity resource build()
-      case None => Response status NOT_FOUND build()
+      case None => notFound
     })
   }
 
@@ -44,9 +44,19 @@ abstract class AbstractPartialRestController[T <: Identifiable : Manifest](abstr
 
   @DELETE
   @Path("{resourceId}")
-  def delete(@PathParam("resourceId") resourceId: String): Response = notImplemented
+  def delete(@PathParam("resourceId") resourceId: String): Response = {
+    logger info s"deleting $resourceId"
+    process[Option[Unit]](abstractCrudRepository delete resourceId, {
+      case Some(resource) => noContent
+      case None => notFound
+    })
+  }
 
-  protected def notImplemented: Response = Response status NOT_IMPLEMENTED build()
+  private def notImplemented: Response = Response status NOT_IMPLEMENTED build()
+
+  private def notFound: Response = Response status NOT_FOUND build()
+
+  private def noContent: Response = Response status NO_CONTENT build()
 
   private def uri(resource: T)(implicit manifest: Manifest[T]): URI =
     new URI(s"${manifest.runtimeClass.getSimpleName.toLowerCase}/${resource id}")
