@@ -56,7 +56,16 @@ abstract class AbstractMongoCrudRepository[T <: Identifiable]
 
   override def update(resourceId: String, updateQuery: String): Try[Option[AnyRef]] = Failure(new RuntimeException("not yet implemented"))
 
-  override def delete(resourceId: String): Try[Option[Unit]] = Failure(new RuntimeException("not yet implemented"))
+  override def delete(resourceId: String): Try[Option[Unit]] = {
+    logger info s"deleting $resourceId"
+    Try(collection remove idQuery(resourceId)) match {
+      case Success(writeResult) =>
+        if (Option(writeResult).isDefined && writeResult.getN > 0) Success(Some())
+        else Success(None)
+      case Failure(throwable) => logAndFail(throwable)
+      case _ => logAndFail(new RuntimeException(s"unknown delete failure for $resourceId"))
+    }
+  }
 
   override def query(queryString: String): Try[Paginated[T]] = Failure(new RuntimeException("not yet implemented"))
 

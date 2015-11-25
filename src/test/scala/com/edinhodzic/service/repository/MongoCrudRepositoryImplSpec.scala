@@ -110,6 +110,41 @@ class MongoCrudRepositoryImplSpec extends SpecificationWithJUnit with Mockito {
 
   }
 
-  // TODO test update and delete functions
+  // TODO test update function
+
+  "repository delete" should {
+
+    def mockCollectionRemoveToReturn(n: Int) = {
+      writeResult.getN returns n
+      collection remove idQuery returns writeResult
+    }
+
+    "invoke collection remove" in {
+      repository delete resourceId
+      there was one(collection).remove(idQuery)
+    }
+
+    "return success with some when collection remove succeeds with some" in {
+      mockCollectionRemoveToReturn(1)
+      repository delete resourceId match {
+        case Success(option) if option.isDefined => true
+        case _ => false
+      }
+    }
+
+    "return success none when collection remove succeeds with none" in {
+      mockCollectionRemoveToReturn(0)
+      repository delete resourceId match {
+        case Success(option) if option.isEmpty => true
+        case _ => false
+      }
+    }
+
+    "return failure when collection remove throws an exception" in {
+      collection remove idQuery throws new RuntimeException
+      repository delete resourceId must beFailedTry
+    }
+
+  }
 
 }
