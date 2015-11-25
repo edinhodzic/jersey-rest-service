@@ -4,7 +4,7 @@ import java.net.URI
 import javax.ws.rs._
 import javax.ws.rs.core.MediaType._
 import javax.ws.rs.core.Response
-import javax.ws.rs.core.Response.Status.{NOT_FOUND, NOT_IMPLEMENTED, NO_CONTENT}
+import javax.ws.rs.core.Response.Status.{NOT_FOUND, NO_CONTENT}
 
 import com.edinhodzic.service.domain.Identifiable
 import com.edinhodzic.service.repository.AbstractPartialCrudRepository
@@ -37,11 +37,6 @@ abstract class AbstractPartialRestController[T <: Identifiable : Manifest](abstr
     })
   }
 
-  @PUT
-  @Path("{resourceId}")
-  @Consumes(Array(APPLICATION_JSON))
-  def put(@PathParam("resourceId") resourceId: String, resource: T): Response = notImplemented
-
   @DELETE
   @Path("{resourceId}")
   def delete(@PathParam("resourceId") resourceId: String): Response = {
@@ -52,16 +47,14 @@ abstract class AbstractPartialRestController[T <: Identifiable : Manifest](abstr
     })
   }
 
-  private def notImplemented: Response = Response status NOT_IMPLEMENTED build()
-
   private def notFound: Response = Response status NOT_FOUND build()
 
-  private def noContent: Response = Response status NO_CONTENT build()
+  protected def noContent: Response = Response status NO_CONTENT build()
 
   private def uri(resource: T)(implicit manifest: Manifest[T]): URI =
     new URI(s"${manifest.runtimeClass.getSimpleName.toLowerCase}/${resource id}")
 
-  private def process[S](repositoryFunction: (Try[S]), successFunction: (S => Response)): Response =
+  protected def process[S](repositoryFunction: (Try[S]), successFunction: (S => Response)): Response =
     repositoryFunction match {
       case Success(subject) => successFunction(subject)
       case Failure(throwable) =>

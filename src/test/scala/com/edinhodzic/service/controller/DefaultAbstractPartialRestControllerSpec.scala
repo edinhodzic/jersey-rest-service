@@ -90,8 +90,6 @@ class DefaultAbstractPartialRestControllerSpec extends JerseySpecification with 
 
   }
 
-  // TODO implement put function
-
   "Controller delete function" should {
 
     def mockRepositoryDeleteToReturnSuccess =
