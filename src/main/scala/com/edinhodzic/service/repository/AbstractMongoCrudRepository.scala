@@ -42,7 +42,17 @@ abstract class AbstractMongoCrudRepository[T <: Identifiable]
     }
   }
 
-  override def read(resourceId: String): Try[Option[T]] = Failure(new RuntimeException("not yet implemented"))
+  override def read(resourceId: String): Try[Option[T]] = {
+    logger info s"reading $resourceId"
+    Try(collection findOne idQuery(resourceId)) match {
+      case Success(maybeDbObject) => maybeDbObject match {
+        case Some(dbObject) => Success(Some(converter deserialise dbObject))
+        case None => Success(None)
+      }
+      case Failure(throwable) => logAndFail(throwable)
+      case _ => logAndFail(new RuntimeException(s"unknown read failure for $resourceId"))
+    }
+  }
 
   override def update(resourceId: String, updateQuery: String): Try[Option[AnyRef]] = Failure(new RuntimeException("not yet implemented"))
 

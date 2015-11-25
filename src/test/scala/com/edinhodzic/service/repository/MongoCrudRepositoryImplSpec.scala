@@ -4,11 +4,12 @@ import com.edinhodzic.service.domain.Resource
 import com.edinhodzic.service.util.Converter
 import com.mongodb.casbah.Imports._
 import com.mongodb.casbah.MongoCollection
-import com.mongodb.casbah.commons.Imports
+import com.mongodb.casbah.commons.{Imports, TypeImports}
 import org.specs2.mock.Mockito
 import org.specs2.mutable.SpecificationWithJUnit
 
 import scala.language.postfixOps
+import scala.util.Success
 
 class MongoCrudRepositoryImplSpec extends SpecificationWithJUnit with Mockito {
   isolated
@@ -74,6 +75,41 @@ class MongoCrudRepositoryImplSpec extends SpecificationWithJUnit with Mockito {
 
   }
 
-  // TODO test read, update and delete functions
+  "repository read function" should {
+
+    def mockCollectionFindOneToReturn(maybeDbObject: Option[TypeImports.DBObject]) =
+      collection.findOne(idQuery) returns maybeDbObject
+
+    "invoke collection find one" in {
+      mockCollectionFindOneToReturn(None)
+      repository read resourceId
+      there was two(collection).findOne(idQuery) // TODO should be single invocation
+    }
+
+    "return success with some when collection find one succeeds with some" in {
+      converter deserialise dbObject returns resource
+      mockCollectionFindOneToReturn(Some(dbObject))
+      repository read resourceId match {
+        case Success(maybeResource) if maybeResource.isDefined => true
+        case _ => false
+      }
+    }
+
+    "return success none when collection find one succeeds with none" in {
+      mockCollectionFindOneToReturn(None)
+      repository read resourceId match {
+        case Success(maybeResource) if maybeResource.isEmpty => true
+        case _ => false
+      }
+    }
+
+    "return failure when collection find one throws an exception" in {
+      collection findOne idQuery throws new RuntimeException
+      repository read resourceId must beFailedTry
+    }
+
+  }
+
+  // TODO test update and delete functions
 
 }
