@@ -7,6 +7,7 @@ import com.edinhodzic.service.util.Converter
 import com.mongodb.DBObject
 import com.mongodb.casbah.Imports._
 import com.mongodb.casbah.MongoCollection
+import com.mongodb.util.JSON
 import org.bson.types.ObjectId
 import org.slf4j.{Logger, LoggerFactory}
 
@@ -54,7 +55,16 @@ abstract class AbstractMongoCrudRepository[T <: Identifiable]
     }
   }
 
-  override def update(resourceId: String, updateQuery: String): Try[Option[AnyRef]] = Failure(new RuntimeException("not yet implemented"))
+  override def update(resourceId: String, updateQuery: String): Try[Option[AnyRef]] = {
+    logger info s"updating $resourceId"
+    val dbObject: DBObject = JSON.parse(updateQuery).asInstanceOf[DBObject]
+    Try(collection update(idQuery(resourceId), dbObject)) match {
+      case Success(writeResult) if Option(writeResult).isDefined && writeResult.getN == 1 =>
+        Success(Some(writeResult)) // TODO this does not contain the update
+      case Failure(throwable) => logAndFail(throwable)
+      case x => logAndFail(new RuntimeException(s"unknown update failure for $resourceId"))
+    }
+  }
 
   override def delete(resourceId: String): Try[Option[Unit]] = {
     logger info s"deleting $resourceId"
