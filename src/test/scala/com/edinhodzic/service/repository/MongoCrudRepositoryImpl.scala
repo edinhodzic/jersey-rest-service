@@ -1,6 +1,5 @@
 package com.edinhodzic.service.repository
 
-import com.dods.service.repository.AbstractMongoCrudRepository
 import com.edinhodzic.service.domain.Resource
 import com.edinhodzic.service.util.Converter
 import com.mongodb.DBObject

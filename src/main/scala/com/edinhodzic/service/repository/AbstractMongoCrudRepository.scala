@@ -1,8 +1,7 @@
-package com.dods.service.repository
+package com.edinhodzic.service.repository
 
 import com.edinhodzic.service.Paginated
 import com.edinhodzic.service.domain.Identifiable
-import com.edinhodzic.service.repository.{AbstractPartialCrudRepository, PartialUpdates, Queryable}
 import com.edinhodzic.service.util.Converter
 import com.mongodb.DBObject
 import com.mongodb.casbah.Imports._
@@ -77,7 +76,18 @@ abstract class AbstractMongoCrudRepository[T <: Identifiable]
     }
   }
 
-  override def query(queryString: String): Try[Paginated[T]] = Failure(new RuntimeException("not yet implemented"))
+  // TODO think about cursor isolation and snapshot mode : http://docs.mongodb.org/manual/core/cursors/
+  // TODO cursor iterator iterates in batches of 20 by default
+  override def query(queryString: String): Try[Paginated[T]] = {
+    logger info s"querying $queryString"
+    Try(collection find parse(queryString)) match {
+      case Success(mongoCursor) =>
+        val paginated: Paginated[T] = paginate(mongoCursor)
+        logger info s"query $queryString produced result $paginated"
+        Success(paginated)
+      case Failure(throwable) => logAndFail(throwable)
+    }
+  }
 
   protected def idQuery(resourceId: String): DBObject =
     MongoDBObject("_id" -> new ObjectId(resourceId))
@@ -85,6 +95,17 @@ abstract class AbstractMongoCrudRepository[T <: Identifiable]
   protected def logAndFail(throwable: Throwable): Failure[Nothing] = {
     logger error s"$throwable"
     Failure(throwable)
+  }
+
+  private def parse(queryString: String): DBObject =
+    JSON.parse(queryString).asInstanceOf[DBObject]
+
+  private def paginate(mongoCursor: MongoCursor): Paginated[T] = {
+    val dbObjectIterator: Iterator[DBObject] = mongoCursor take 20
+    val subscriptionIterator: Iterator[T] = dbObjectIterator map (converter deserialise)
+    val subscriptionArray: Array[T] = subscriptionIterator.toArray[T]
+    // TODO remove the hardcoded page number (2) when the initial request can take in pagination
+    new Paginated[T](subscriptionArray, mongoCursor size, 2)
   }
 
 }

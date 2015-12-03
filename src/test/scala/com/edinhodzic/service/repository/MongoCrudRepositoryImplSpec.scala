@@ -2,10 +2,10 @@ package com.edinhodzic.service.repository
 
 import com.edinhodzic.service.domain.Resource
 import com.edinhodzic.service.util.Converter
-import com.mongodb.DBObject
 import com.mongodb.casbah.Imports._
 import com.mongodb.casbah.MongoCollection
 import com.mongodb.casbah.commons.{Imports, TypeImports}
+import com.mongodb.{DBObject, casbah}
 import org.mockito.Matchers
 import org.specs2.mock.Mockito
 import org.specs2.mutable.SpecificationWithJUnit
@@ -181,6 +181,32 @@ class MongoCrudRepositoryImplSpec extends SpecificationWithJUnit with Mockito {
       collection remove idQuery throws new RuntimeException
       repository delete resourceId must beFailedTry
     }
+
+  }
+
+  "repository query" should {
+
+    val searchString: JSFunction = """{ "this" : "foo", "that" : "bar", "other" : "baz" }"""
+    val searchQuery: Imports.DBObject = MongoDBObject("this" -> "foo", "that" -> "bar", "other" -> "baz")
+    val searchResult: Imports.DBObject = MongoDBObject("field" -> "value")
+    val mongoCursor: casbah.Imports.MongoCursor = mock[MongoCursor]
+    mongoCursor take 20 returns Iterator.single[DBObject](searchResult)
+
+    def mockCollectionFindToReturn(mongoCursor: MongoCursor) =
+      collection.find(searchQuery) returns mongoCursor
+
+    "invoke collection find" in {
+      mockCollectionFindToReturn(mongoCursor)
+      repository query searchString
+      there was one(collection).find(searchQuery)
+    }
+
+    "return failure when collection find throws an exception" in {
+      collection find searchQuery throws new RuntimeException
+      repository query searchString must beFailedTry
+    }
+
+    // TODO test pagination
 
   }
 
