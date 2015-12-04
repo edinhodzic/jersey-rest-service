@@ -2,6 +2,8 @@
 
 This is a work in process REST service abstraction. It assumes and operates on a set of conventions around CRUD and query operations.
 
+[![Build Status](https://travis-ci.org/edinhodzic/jersey-rest-service.svg?branch=master)](https://travis-ci.org/edinhodzic/jersey-rest-service)
+
 ## Service conventions
 
 This service abstraction conforms to a set of conventions regarding REST and database naming.
