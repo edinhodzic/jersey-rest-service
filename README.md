@@ -100,23 +100,100 @@ Assuming the above implementations are in a web app, packaged up, deployed and r
 
 ### Create a resource
     
-    // TODO
+    curl -iL -X POST http://localhost:9000/user \
+    > -H content-type:application/json \
+    > -d '{ "data" : "some user data" }' \
+    > -u user:m0nkey
+    HTTP/1.1 201 Created
+    Server: Apache-Coyote/1.1
+    Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+    X-Application-Context: Dods User REST Service:9000
+    Location: http://localhost:9000/user/5662b08fd4c686edee605ef8
+    Content-Type: application/json;charset=UTF-8
+    Content-Length: 57
+    Date: Sat, 05 Dec 2015 09:38:23 GMT
+
+    {"data":"some user data","id":"5662b08fd4c686edee605ef8"}
     
 ### Read a resource
     
-    // TODO
+    curl -iL http://localhost:9000/user/5662b08fd4c686edee605ef8 -u user:m0nkey
+    HTTP/1.1 200 OK
+    Server: Apache-Coyote/1.1
+    Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+    X-Application-Context: Dods User REST Service:9000
+    Content-Type: application/json;charset=UTF-8
+    Content-Length: 35
+    Date: Sat, 05 Dec 2015 09:38:57 GMT
+
+    {"data":"some user data","id":null}
     
 ### Update a resource
     
-    // TODO
-    
+    curl -iL -X PUT http://localhost:9000/user/5662b08fd4c686edee605ef8 \
+    > -H content-type:application/json \
+    > -d '{$set : {"data" : "update existing field"}}' \
+    > -u user:m0nkey
+    HTTP/1.1 204 No Content
+    Server: Apache-Coyote/1.1
+    Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+    X-Application-Context: Dods User REST Service:9000
+    Date: Sat, 05 Dec 2015 09:39:38 GMT
+
+- noteworthy is that the above can be a partial update; not so obvious with this example where the domain object has a single field
+
 ### Delete a resource
     
-    // TODO
+    curl -iL -X DELETE http://localhost:9000/user/5662b08fd4c686edee605ef8 -u user:m0nkey
+    HTTP/1.1 204 No Content
+    Server: Apache-Coyote/1.1
+    Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+    X-Application-Context: Dods User REST Service:9000
+    Date: Sat, 05 Dec 2015 09:40:28 GMT
     
 ### Query a resource
     
-    // TODO
+    curl -v -X POST http://localhost:9000/user/query \
+    > -H content-type:application/json \
+    > -d '{ "data" : { "$regex" : "goes here" } }' \
+    > -u user:m0nkey| python -m json.tool
+      % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                     Dload  Upload   Total   Spent    Left  Speed
+      0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying ::1...
+    * Connected to localhost (::1) port 9000 (#0)
+    * Server auth using Basic with user 'user'
+    > POST /user/query HTTP/1.1
+    > Host: localhost:9000
+    > Authorization: Basic dXNlcjptMG5rZXk=
+    > User-Agent: curl/7.43.0
+    > Accept: */*
+    > content-type:application/json
+    > Content-Length: 39
+    > 
+    } [39 bytes data]
+    * upload completely sent off: 39 out of 39 bytes
+    < HTTP/1.1 200 OK
+    < Server: Apache-Coyote/1.1
+    < Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+    < X-Application-Context: Dods User REST Service:9000
+    < Content-Type: application/json;charset=UTF-8
+    < Content-Length: 94
+    < Date: Sat, 05 Dec 2015 09:42:26 GMT
+    < 
+    { [94 bytes data]
+    100   133  100    94  100    39   3087   1281 --:--:-- --:--:-- --:--:--  3133
+    * Connection #0 to host localhost left intact
+    {
+        "page": 2,
+        "pageTotal": 1,
+        "results": [
+            {
+                "data": "user data goes here",
+                "id": null
+            }
+        ],
+        "resultsTotal": 1
+    }
 
 # What's next?
 
