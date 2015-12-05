@@ -195,8 +195,41 @@ Assuming the above implementations are in a web app, packaged up, deployed and r
         "resultsTotal": 1
     }
 
+# Metrics
+
+One of the main components of this library is [Spring Boot](http://projects.spring.io/spring-boot/) which provides a set of useful out of the box [metric endpoints](http://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-metrics.html). In this library, by default, these metric endpoints have been mapped to the `/admin` context.
+
+Below are some examples of the available metrics and what they may be useful for, for more detailed information please refer to the Spring Boot documentation.
+
+- [`http://localhost:9000/admin/health`](http://localhost:9000/admin/health) : TODO describe briefly
+- [`http://localhost:9000/admin/metrics`](http://localhost:9000/admin/metrics) : TODO describe briefly
+- [`http://localhost:9000/admin/mappings`](http://localhost:9000/admin/mappings) : TODO describe briefly
+- [`http://localhost:9000/admin/env`](http://localhost:9000/admin/env) : TODO describe briefly
+- [`http://localhost:9000/admin/trace`](http://localhost:9000/admin/trace) : TODO describe briefly
+
 # What's next?
 
-- write a REST service using this library
-- dervie from the above service, a Maven arcehtype
+- write a REST service using this library - done, see [somecompany-user](https://github.com/edinhodzic/somecompany-user)
+- derive from the above service, a Maven archetype - in progress, see [jersey-rest-service-archetype](https://github.com/edinhodzic/jersey-rest-service-archetype)
 - use the maven archetype to build micro services from scratch, based on this stack, within minutes
+
+## Incomplete features
+
+- querying is currently implemented but we may need to take it further and make use of [Mongo's snapshots](https://docs.mongodb.org/manual/reference/operator/meta/snapshot/)
+- pagination is partially implemented in the sense that a query response contains pagination but the initial request does not
+
+## Future development ideas
+
+- Cross-cutting concerns
+    - security
+    - validation
+    - caching
+    - logging
+    - audit events?
+- at the moment the service assumes a local MongoDB instance, need for this to be configurable via a MongoDB database string property e.g. `mongo.url=...`
+- might be worth investigating whether it would have been easier to leverage Spring Boot's support for MondoDB via Spring Data; see [http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-mongodb](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-mongodb)
+- service url versioning
+- integrate HATEOAS links (Spring Boot may already have support for it?)
+- swap HTTP basic authentication for [OAuth](http://oauth.net/2/)
+- upcoming in Spring Boot is [CORS support](http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#boot-features-cors)
+- integrate [Swagger](http://swagger.io/), Spring Boot may already have support for it
