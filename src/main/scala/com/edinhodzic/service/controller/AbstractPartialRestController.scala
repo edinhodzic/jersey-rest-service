@@ -51,6 +51,8 @@ abstract class AbstractPartialRestController[T <: Identifiable : Manifest](abstr
 
   protected def noContent: Response = Response status NO_CONTENT build()
 
+  protected def serverError: Response = Response serverError() build()
+
   private def uri(resource: T)(implicit manifest: Manifest[T]): URI =
     new URI(s"${manifest.runtimeClass.getSimpleName.toLowerCase}/${resource id}")
 
