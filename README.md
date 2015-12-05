@@ -56,44 +56,44 @@ The controller and repository rely on abstractions within this library hence the
 Let's build this bottom up.
 
 ### Domain model implementation
-
-    case class User(@BeanProperty var data: String) extends Identifiable {
-      def this() = this(null)
-    }
-
+```scala
+case class User(@BeanProperty var data: String) extends Identifiable {
+  def this() = this(null)
+}
+```
 ### Converter implementation
+```scala
+@Component
+class UserConverter extends Converter[User, DBObject] {
 
-    @Component
-    class UserConverter extends Converter[User, DBObject] {
-    
-      override def serialise(user: User): DBObject =
-        MongoDBObject.newBuilder
-          .+=("data" -> user.data)
-          .result()
-    
-      override def deserialise(dbObject: DBObject): User =
-        User(dbObject.get("data").asInstanceOf[String])
-    
-    }
-    
+  override def serialise(user: User): DBObject =
+    MongoDBObject.newBuilder
+      .+=("data" -> user.data)
+      .result()
+
+  override def deserialise(dbObject: DBObject): User =
+    User(dbObject.get("data").asInstanceOf[String])
+
+}
+```
 ### Repository implementation
-
-    @Component
-    class UserCrudRepository @Autowired()
-    (converter: Converter[User, DBObject])
-      extends AbstractMongoCrudRepository[User](converter)
-      
+```scala
+@Component
+class UserCrudRepository @Autowired()
+(converter: Converter[User, DBObject])
+  extends AbstractMongoCrudRepository[User](converter)
+```
 As previously mentioned, the MongoDB database and collection name will be determined by the class name supplied to `AbstractMongoCrudRepository` via the generic parameter. In this case that parameter is the `User` class, therefore the derived database and collection names will be `users` and `user` respectively.
     
 ### Controller implementation
-
-    @Component
-    @Path("user")
-    class UserRestController @Autowired()
-    (userCrudRepository: AbstractPartialCrudRepository[User]
-      with PartialUpdates[User] with Queryable[User])
-      extends QueryableRestControllerWithPartialUpdates[User](userCrudRepository)
-
+```scala
+@Component
+@Path("user")
+class UserRestController @Autowired()
+(userCrudRepository: AbstractPartialCrudRepository[User]
+  with PartialUpdates[User] with Queryable[User])
+  extends QueryableRestControllerWithPartialUpdates[User](userCrudRepository)
+```
 ## Usage
 
 Assuming the above implementations are in a web app, packaged up, deployed and running on `http://api.example.com:9000/user` for example ([`jersey-rest-service-archetype`](https://github.com/edinhodzic/jersey-rest-service-archetype) will automate this for you), then the below CRUD and query operations should be possible.
