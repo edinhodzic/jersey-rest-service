@@ -214,16 +214,17 @@ This project makes and uses the abstractions depicted in the below diagram.
 
 ## Future development ideas
 
-- Cross-cutting concerns
-    - security
-    - validation
-    - caching
-    - logging
-    - audit events?
-- at the moment the service assumes a local MongoDB instance, need for this to be configurable via a MongoDB database string property e.g. `mongo.url=...`
-- might be worth investigating whether it would have been easier to leverage Spring Boot's support for MondoDB via Spring Data; see [http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-mongodb](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-mongodb)
-- service url versioning
-- integrate HATEOAS links (Spring Boot may already have support for it?)
-- swap HTTP basic authentication for [OAuth](http://oauth.net/2/)
-- upcoming in Spring Boot is [CORS support](http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#boot-features-cors)
-- integrate [Swagger](http://swagger.io/), Spring Boot may already have support for it
+- [ ] make it asynchronous
+- [ ] Cross-cutting concerns
+    - [ ] security
+    - [ ] validation
+    - [ ] caching
+    - [ ] logging
+    - [ ] audit events?
+- [ ] at the moment the service assumes a local MongoDB instance, need for this to be configurable via a MongoDB database string property e.g. `mongo.url=...`
+- [ ] might be worth investigating whether it would have been easier to leverage Spring Boot's support for MondoDB via Spring Data; see [http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-mongodb](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-mongodb)
+- [ ] service url versioning
+- [ ] integrate HATEOAS links (Spring Boot may already have support for it?)
+- [ ] swap HTTP basic authentication for [OAuth](http://oauth.net/2/)
+- [ ] upcoming in Spring Boot is [CORS support](http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#boot-features-cors)
+- [ ] integrate [Swagger](http://swagger.io/), Spring Boot may already have support for it
