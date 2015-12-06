@@ -203,7 +203,7 @@ This project makes and uses the abstractions depicted in the below diagram.
 
 # What's next?
 
-- [ ] write a REST service using this library - done, see [somecompany-user](https://github.com/edinhodzic/somecompany-user)
+- [x] write a REST service using this library - done, see [somecompany-user](https://github.com/edinhodzic/somecompany-user)
 - [ ] derive from the above service, a Maven archetype - in progress, see [jersey-rest-service-archetype](https://github.com/edinhodzic/jersey-rest-service-archetype)
 - [ ] use the maven archetype to build micro services from scratch, based on this stack, within minutes
 
