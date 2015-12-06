@@ -203,14 +203,14 @@ This project makes and uses the abstractions depicted in the below diagram.
 
 # What's next?
 
-- write a REST service using this library - done, see [somecompany-user](https://github.com/edinhodzic/somecompany-user)
-- derive from the above service, a Maven archetype - in progress, see [jersey-rest-service-archetype](https://github.com/edinhodzic/jersey-rest-service-archetype)
-- use the maven archetype to build micro services from scratch, based on this stack, within minutes
+- [ ] write a REST service using this library - done, see [somecompany-user](https://github.com/edinhodzic/somecompany-user)
+- [ ] derive from the above service, a Maven archetype - in progress, see [jersey-rest-service-archetype](https://github.com/edinhodzic/jersey-rest-service-archetype)
+- [ ] use the maven archetype to build micro services from scratch, based on this stack, within minutes
 
 ## Incomplete features
 
-- querying is currently implemented but we may need to take it further and make use of [Mongo's snapshots](https://docs.mongodb.org/manual/reference/operator/meta/snapshot/)
-- pagination is partially implemented in the sense that a query response contains pagination but the initial request does not
+- [ ] querying is currently implemented but we may need to take it further and make use of [Mongo's snapshots](https://docs.mongodb.org/manual/reference/operator/meta/snapshot/)
+- [ ] pagination is partially implemented in the sense that a query response contains pagination but the initial request does not
 
 ## Future development ideas
 
