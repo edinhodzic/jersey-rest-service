@@ -195,17 +195,9 @@ Assuming the above implementations are in a web app, packaged up, deployed and r
         "resultsTotal": 1
     }
 
-# Metrics
+# Abstractions
 
-One of the main components of this library is [Spring Boot](http://projects.spring.io/spring-boot/) which provides a set of useful out of the box [metric endpoints](http://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-metrics.html). In this library, by default, these metric endpoints have been mapped to the `/admin` context.
-
-Below are some examples of the available metrics and what they may be useful for, for more detailed information please refer to the Spring Boot documentation.
-
-- [`http://localhost:9000/admin/health`](http://localhost:9000/admin/health) : TODO describe briefly
-- [`http://localhost:9000/admin/metrics`](http://localhost:9000/admin/metrics) : TODO describe briefly
-- [`http://localhost:9000/admin/mappings`](http://localhost:9000/admin/mappings) : TODO describe briefly
-- [`http://localhost:9000/admin/env`](http://localhost:9000/admin/env) : TODO describe briefly
-- [`http://localhost:9000/admin/trace`](http://localhost:9000/admin/trace) : TODO describe briefly
+![REST service abstractions](https://cloud.githubusercontent.com/assets/4981314/11613130/c727cace-9c0d-11e5-913f-189dc08fe2c1.jpg)
 
 # What's next?
 
