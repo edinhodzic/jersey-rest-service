@@ -197,7 +197,9 @@ Assuming the above implementations are in a web app, packaged up, deployed and r
 
 # Abstractions
 
-![REST service abstractions](https://cloud.githubusercontent.com/assets/4981314/11613130/c727cace-9c0d-11e5-913f-189dc08fe2c1.jpg)
+This project makes and uses the abstractions depicted in the below diagram.
+
+![REST service abstractions](https://cloud.githubusercontent.com/assets/4981314/11613176/91cc48d0-9c0f-11e5-955a-b1153f3f7923.jpg)
 
 # What's next?
 
