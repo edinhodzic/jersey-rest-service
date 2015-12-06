@@ -4,6 +4,12 @@ This is a work in process REST service abstraction. It assumes and operates on a
 
 [![Build Status](https://travis-ci.org/edinhodzic/jersey-rest-service.svg?branch=master)](https://travis-ci.org/edinhodzic/jersey-rest-service)
 
+# Abstractions
+
+This project makes and uses the abstractions depicted in the below diagram.
+
+![REST service abstractions](https://cloud.githubusercontent.com/assets/4981314/11613176/91cc48d0-9c0f-11e5-955a-b1153f3f7923.jpg)
+
 ## Service conventions
 
 This service abstraction conforms to a set of conventions regarding REST and database naming.
@@ -107,7 +113,6 @@ Assuming the above implementations are in a web app, packaged up, deployed and r
     HTTP/1.1 201 Created
     Server: Apache-Coyote/1.1
     Strict-Transport-Security: max-age=31536000 ; includeSubDomains
-    X-Application-Context: Dods User REST Service:9000
     Location: http://localhost:9000/user/5662b08fd4c686edee605ef8
     Content-Type: application/json;charset=UTF-8
     Content-Length: 57
@@ -121,7 +126,6 @@ Assuming the above implementations are in a web app, packaged up, deployed and r
     HTTP/1.1 200 OK
     Server: Apache-Coyote/1.1
     Strict-Transport-Security: max-age=31536000 ; includeSubDomains
-    X-Application-Context: Dods User REST Service:9000
     Content-Type: application/json;charset=UTF-8
     Content-Length: 35
     Date: Sat, 05 Dec 2015 09:38:57 GMT
@@ -137,7 +141,6 @@ Assuming the above implementations are in a web app, packaged up, deployed and r
     HTTP/1.1 204 No Content
     Server: Apache-Coyote/1.1
     Strict-Transport-Security: max-age=31536000 ; includeSubDomains
-    X-Application-Context: Dods User REST Service:9000
     Date: Sat, 05 Dec 2015 09:39:38 GMT
 
 - noteworthy is that the above can be a partial update; not so obvious with this example where the domain object has a single field
@@ -148,7 +151,6 @@ Assuming the above implementations are in a web app, packaged up, deployed and r
     HTTP/1.1 204 No Content
     Server: Apache-Coyote/1.1
     Strict-Transport-Security: max-age=31536000 ; includeSubDomains
-    X-Application-Context: Dods User REST Service:9000
     Date: Sat, 05 Dec 2015 09:40:28 GMT
     
 ### Query a resource
@@ -175,7 +177,6 @@ Assuming the above implementations are in a web app, packaged up, deployed and r
     < HTTP/1.1 200 OK
     < Server: Apache-Coyote/1.1
     < Strict-Transport-Security: max-age=31536000 ; includeSubDomains
-    < X-Application-Context: Dods User REST Service:9000
     < Content-Type: application/json;charset=UTF-8
     < Content-Length: 94
     < Date: Sat, 05 Dec 2015 09:42:26 GMT
@@ -194,12 +195,6 @@ Assuming the above implementations are in a web app, packaged up, deployed and r
         ],
         "resultsTotal": 1
     }
-
-# Abstractions
-
-This project makes and uses the abstractions depicted in the below diagram.
-
-![REST service abstractions](https://cloud.githubusercontent.com/assets/4981314/11613176/91cc48d0-9c0f-11e5-955a-b1153f3f7923.jpg)
 
 # What's next?
 
